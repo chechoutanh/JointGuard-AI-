@@ -1,0 +1,28 @@
+Health index = (Fc / mean Fc of the joint's first 7 days - 1) / 1.5. 'Index error' is the mean absolute
+difference from the index that the true wear would give, over all days.
+
+ramp_early: 400 days, 43200 rows, ramp on day 200
+  joint wear at end service day day by the plan index at end index error, raw temperature taken out temp C, low to high
+      0       0.530           -             551        0.493           0.0250                0.0030      28.1 to 48.7
+      1       0.666           -             463        0.615           0.0291                0.0027      28.1 to 48.7
+      2       0.802         399             394        0.741           0.0348                0.0025      28.5 to 52.5
+      3       0.938         360             358        0.866           0.0384                0.0026      28.5 to 52.5
+      4       1.074         329             326        0.976           0.0588                0.0026      29.6 to 63.9
+      5       1.211         304             301        1.094           0.0632                0.0031      29.6 to 63.9
+  joints that reach the service threshold within the run: 4 of 6
+  plot: results/robot/life_ramp_early.png
+
+ramp_late: 400 days, 43200 rows, ramp on day 1500
+  joint wear at end service day day by the plan index at end index error, raw temperature taken out temp C, low to high
+      0       0.353           -             907        0.357           0.0085                0.0029      28.1 to 37.4
+      1       0.444           -             720        0.439           0.0093                0.0026      28.1 to 37.4
+      2       0.535           -             599        0.533           0.0109                0.0025      28.4 to 39.2
+      3       0.626           -             515        0.619           0.0117                0.0026      28.4 to 39.2
+      4       0.716           -             444        0.720           0.0172                0.0025      29.4 to 44.9
+      5       0.807         395             391        0.802           0.0183                0.0030      29.4 to 44.9
+  joints that reach the service threshold within the run: 1 of 6
+  plot: results/robot/life_ramp_late.png
+
+How long must a run be for every joint to reach the service threshold? (plan only, no noise)
+  ramp_early  first joint on day 301, last joint on day 551: a run of 601 days takes 15 minutes
+  ramp_late   first joint on day 391, last joint on day 907: a run of 957 days takes 24 minutes

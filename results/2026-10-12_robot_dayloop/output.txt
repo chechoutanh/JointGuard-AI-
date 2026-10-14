@@ -1,0 +1,20 @@
+A. Time of one day (6 joints, 18 speeds each)
+  1.50 s per day
+  the demo, 60 days                     1.5 minutes
+  one run, 400 days                    10.0 minutes
+  5 runs x 400 days                    50.1 minutes
+  2 scenarios x 5 runs x 400 days     100.2 minutes
+
+B. python -m tools.robot demo --days 60 --seed 0, run twice, then once with seed 1
+  file                   bytes  SHA-256 (first 16)  same on 2nd run  same with seed 1
+  sweeps.parquet        134884    10992b526792cf6e             True             False
+  schedule.csv             655    293d24c8a740e975             True              True
+  actual_duty.csv         1324    56b79c62310fea2d             True             False
+  ground_truth.csv        9450    18880af3aac63a78             True             False
+  events.csv                16    e6f18ebf2401b93c             True              True
+  all five files byte-identical on the second run: True
+
+C. The leakage guard on the sweeps.parquet just written
+  6480 rows, columns: day, joint, v_target, v_measured, friction_torque, temperature_c, posture_q, payload_kg, duty_planned
+  guard on the file as written: passed
+  guard with a wear column added: refused (leakage: ['wear'] must not be in the feature file)

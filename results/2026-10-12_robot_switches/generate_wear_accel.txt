@@ -1,0 +1,7 @@
+pybullet build time: Oct 21 2025 17:40:50
+simulation only: ramp_early, 850 days, 5 runs, switched on: WEAR_ACCEL
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_accel/run_0  (seed 0, 531 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_accel/run_1  (seed 1, 559 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_accel/run_2  (seed 2, 548 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_accel/run_3  (seed 3, 569 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_accel/run_4  (seed 4, 557 s)

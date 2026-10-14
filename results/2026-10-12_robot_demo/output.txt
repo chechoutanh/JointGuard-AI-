@@ -1,0 +1,15 @@
+health index printed by the demo, for the wear it was given (rows: joint)
+  joint  wear 0.0  wear 0.2  wear 0.5  wear 0.8  wear 1.0
+      0     0.003     0.205     0.507     0.810     1.011
+      1     0.003     0.203     0.503     0.803     1.003
+      2    -0.005     0.195     0.496     0.797     0.998
+      3    -0.010     0.188     0.484     0.781     0.979
+      4    -0.008     0.191     0.489     0.787     0.986
+      5    -0.002     0.198     0.497     0.797     0.997
+largest difference between the index and the wear: 0.021
+
+what the command prints (joint 3, wear 0.5, seed 0), without the window:
+simulation only: live sweep of joint 3, with its wear set to 0.5 by hand
+  new joint (its own baseline):  Fc 1.7930 N m
+  this sweep:                    Fc 3.1561 N m, Fv 0.5367 N m s/rad
+  health index = (Fc / Fc new - 1) / 1.5 = 0.51      service is due at 0.8

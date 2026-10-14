@@ -1,0 +1,5 @@
+sweeps.parquet     M2: 10992b526792cf6e  now: 10992b526792cf6e  same: True
+schedule.csv       M2: 293d24c8a740e975  now: 293d24c8a740e975  same: True
+actual_duty.csv    M2: 56b79c62310fea2d  now: 56b79c62310fea2d  same: True
+ground_truth.csv   M2: 18880af3aac63a78  now: 18880af3aac63a78  same: True
+events.csv         M2: e6f18ebf2401b93c  now: e6f18ebf2401b93c  same: True

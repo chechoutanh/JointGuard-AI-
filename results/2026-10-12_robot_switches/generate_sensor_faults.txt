@@ -1,0 +1,7 @@
+pybullet build time: Oct 21 2025 17:40:50
+simulation only: ramp_early, 850 days, 5 runs, switched on: SENSOR_FAULTS
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/sensor_faults/run_0  (seed 0, 530 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/sensor_faults/run_1  (seed 1, 560 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/sensor_faults/run_2  (seed 2, 549 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/sensor_faults/run_3  (seed 3, 570 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/sensor_faults/run_4  (seed 4, 557 s)

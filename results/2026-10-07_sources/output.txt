@@ -1,0 +1,100 @@
+
+xjtu: 15 recordings, 9216 snapshots
+  unit                     condition       class      fs Hz snapshots    hours  samples chan  seconds missing
+  Bearing1_1               35Hz_12kN       -          25600       123     2.03    32768    2     1.28       0
+  Bearing1_2               35Hz_12kN       -          25600       161     2.67    32768    2     1.28       0
+  Bearing1_3               35Hz_12kN       -          25600       158     2.62    32768    2     1.28       0
+  Bearing1_4               35Hz_12kN       -          25600       122     2.02    32768    2     1.28       0
+  Bearing1_5               35Hz_12kN       -          25600        52     0.85    32768    2     1.28       0
+  Bearing2_1               37.5Hz_11kN     -          25600       491     8.17    32768    2     1.28       0
+  Bearing2_2               37.5Hz_11kN     -          25600       161     2.67    32768    2     1.28       0
+  Bearing2_3               37.5Hz_11kN     -          25600       533     8.87    32768    2     1.28       0
+  Bearing2_4               37.5Hz_11kN     -          25600        42     0.68    32768    2     1.28       0
+  Bearing2_5               37.5Hz_11kN     -          25600       339     5.63    32768    2     1.28       0
+  Bearing3_1               40Hz_10kN       -          25600      2538    42.28    32768    2     1.28       0
+  Bearing3_2               40Hz_10kN       -          25600      2496    41.58    32768    2     1.28       0
+  Bearing3_3               40Hz_10kN       -          25600       371     6.17    32768    2     1.28       0
+  Bearing3_4               40Hz_10kN       -          25600      1515    25.23    32768    2     1.28       0
+  Bearing3_5               40Hz_10kN       -          25600       114     1.88    32768    2     1.28       0
+  identical signals: none
+
+ims: 4 recordings, 11620 snapshots
+  unit                     condition       class      fs Hz snapshots    hours  samples chan  seconds missing
+  test1_b3                 2000rpm_6000lb  -          20000      2156   345.27    20480    2     1.02       0
+  test1_b4                 2000rpm_6000lb  -          20000      2156   345.27    20480    2     1.02       0
+  test2_b1                 2000rpm_6000lb  -          20000       984   163.83    20480    1     1.02       0
+  test3_b3                 2000rpm_6000lb  -          20000      6324  1053.38    20480    1     1.02       0
+  identical signals: none
+
+kaist: 1 recordings, 129 snapshots
+  unit                     condition       class      fs Hz snapshots    hours  samples chan  seconds missing
+  bearing1                 1775rpm         -          25600       129   128.00   256000    2    10.00      80
+  identical signals: none
+
+seu: 20 recordings, 20 snapshots
+  unit                     condition       class      fs Hz snapshots    hours  samples chan  seconds missing
+  bearingset/ball_20_0     20_0            ball        5120         1        -  1048560    8   204.80       0
+  bearingset/ball_30_2     30_2            ball        5120         1        -  1048560    8   204.80       0
+  bearingset/comb_20_0     20_0            comb        5120         1        -  1048560    8   204.80       0
+  bearingset/comb_30_2     30_2            comb        5120         1        -  1048560    8   204.80       0
+  bearingset/health_20_0   20_0            normal      5120         1        -  1048560    8   204.80       0
+  bearingset/health_30_2   30_2            normal      5120         1        -  1048560    8   204.80       0
+  bearingset/inner_20_0    20_0            inner       5120         1        -  1048560    8   204.80       0
+  bearingset/inner_30_2    30_2            inner       5120         1        -  1048560    8   204.80       0
+  bearingset/outer_20_0    20_0            outer       5120         1        -  1048560    8   204.80       0
+  bearingset/outer_30_2    30_2            outer       5120         1        -  1048560    8   204.80       0
+  gearset/Chipped_20_0     20_0            chipped     5120         1        -  1048560    8   204.80       0
+  gearset/Chipped_30_2     30_2            chipped     5120         1        -  1048560    8   204.80       0
+  gearset/Health_20_0      20_0            normal      5120         1        -  1048560    8   204.80       0
+  gearset/Health_30_2      30_2            normal      5120         1        -  1048560    8   204.80       0
+  gearset/Miss_20_0        20_0            miss        5120         1        -  1048560    8   204.80       0
+  gearset/Miss_30_2        30_2            miss        5120         1        -  1048560    8   204.80       0
+  gearset/Root_20_0        20_0            root        5120         1        -  1048560    8   204.80       0
+  gearset/Root_30_2        30_2            root        5120         1        -  1048560    8   204.80       0
+  gearset/Surface_20_0     20_0            surface     5120         1        -  1048560    8   204.80       0
+  gearset/Surface_30_2     30_2            surface     5120         1        -  1048560    8   204.80       0
+  identical signals: none
+
+cwru: 40 recordings, 40 snapshots
+  unit                     condition       class      fs Hz snapshots    hours  samples chan  seconds missing
+  B007_0                   0hp             ball       12000         1        -   122571    2    10.21       0
+  B007_1                   1hp             ball       12000         1        -   121410    2    10.12       0
+  B007_2                   2hp             ball       12000         1        -   121556    2    10.13       0
+  B007_3                   3hp             ball       12000         1        -   121556    2    10.13       0
+  B014_0                   0hp             ball       12000         1        -   121846    2    10.15       0
+  B014_1                   1hp             ball       12000         1        -   122136    2    10.18       0
+  B014_2                   2hp             ball       12000         1        -   121991    2    10.17       0
+  B014_3                   3hp             ball       12000         1        -   122136    2    10.18       0
+  B021_0                   0hp             ball       12000         1        -   121991    2    10.17       0
+  B021_1                   1hp             ball       12000         1        -   121701    2    10.14       0
+  B021_2                   2hp             ball       12000         1        -   122136    2    10.18       0
+  B021_3                   3hp             ball       12000         1        -   122136    2    10.18       0
+  IR007_0                  0hp             inner      12000         1        -   121265    2    10.11       0
+  IR007_1                  1hp             inner      12000         1        -   121991    2    10.17       0
+  IR007_2                  2hp             inner      12000         1        -   122136    2    10.18       0
+  IR007_3                  3hp             inner      12000         1        -   122917    2    10.24       0
+  IR014_0                  0hp             inner      12000         1        -   121846    2    10.15       0
+  IR014_1                  1hp             inner      12000         1        -   121846    2    10.15       0
+  IR014_2                  2hp             inner      12000         1        -   121846    2    10.15       0
+  IR014_3                  3hp             inner      12000         1        -   121701    2    10.14       0
+  IR021_0                  0hp             inner      12000         1        -   122136    2    10.18       0
+  IR021_1                  1hp             inner      12000         1        -   121556    2    10.13       0
+  IR021_2                  2hp             inner      12000         1        -   121846    2    10.15       0
+  IR021_3                  3hp             inner      12000         1        -   121991    2    10.17       0
+  OR007@6_0                0hp             outer      12000         1        -   121991    2    10.17       0
+  OR007@6_1                1hp             outer      12000         1        -   122426    2    10.20       0
+  OR007@6_2                2hp             outer      12000         1        -   121410    2    10.12       0
+  OR007@6_3                3hp             outer      12000         1        -   122571    2    10.21       0
+  OR014@6_0                0hp             outer      12000         1        -   121846    2    10.15       0
+  OR014@6_1                1hp             outer      12000         1        -   122136    2    10.18       0
+  OR014@6_2                2hp             outer      12000         1        -   121846    2    10.15       0
+  OR014@6_3                3hp             outer      12000         1        -   121991    2    10.17       0
+  OR021@6_0                0hp             outer      12000         1        -   122426    2    10.20       0
+  OR021@6_1                1hp             outer      12000         1        -   121991    2    10.17       0
+  OR021@6_2                2hp             outer      12000         1        -   122281    2    10.19       0
+  OR021@6_3                3hp             outer      12000         1        -   121991    2    10.17       0
+  normal_0                 0hp             normal     48000         1        -   243938    2     5.08       0
+  normal_1                 1hp             normal     48000         1        -   483903    2    10.08       0
+  normal_2                 2hp             normal     48000         1        -   485063    2    10.11       0
+  normal_3                 3hp             normal     48000         1        -   485643    2    10.12       0
+  identical signals: none

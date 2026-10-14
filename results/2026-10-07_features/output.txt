@@ -1,0 +1,43 @@
+PART 1: worked example
+each snapshot is [0.0, 1.0, 0.0, -1.0, 0.0, 1.0, 0.0, -1.0] times an amplitude, at 8 samples per second
+amplitudes of the six snapshots: [2, 3, 2, 4, 8, 16]
+
+raw features, one row per snapshot
+  amplitude         rms        peak    kurtosis       crest    band_1_4 centroid_hz
+          2      1.4142      2.0000      2.0000      1.4142      1.4142      2.0000
+          3      2.1213      3.0000      2.0000      1.4142      2.1213      2.0000
+          2      1.4142      2.0000      2.0000      1.4142      1.4142      2.0000
+          4      2.8284      4.0000      2.0000      1.4142      2.8284      2.0000
+          8      5.6569      8.0000      2.0000      1.4142      5.6569      2.0000
+         16     11.3137     16.0000      2.0000      1.4142     11.3137      2.0000
+
+relative rms, healthy reference = median of the first 3 snapshots seen so far
+  snapshot      rms  reference  relative
+         0   1.4142     1.4142    1.0000
+         1   2.1213     1.7678    1.2000
+         2   1.4142     1.4142    1.0000
+         3   2.8284     1.4142    2.0000
+         4   5.6569     1.4142    4.0000
+         5  11.3137     1.4142    8.0000
+
+PART 2: XJTU-SY, relative rms (largest of the two sensors), healthy snapshots = 10
+  bearing      condition    snapshots  healthy start: mean  last snapshot   largest  missing
+  Bearing1_1   35Hz_12kN          123                1.035          11.80     11.80        0
+  Bearing1_2   35Hz_12kN          161                0.993          19.32     19.32        0
+  Bearing1_3   35Hz_12kN          158                1.010          13.90     13.90        0
+  Bearing1_4   35Hz_12kN          122                0.985           4.78      4.78        0
+  Bearing1_5   35Hz_12kN           52                1.003          14.40     14.40        0
+  Bearing2_1   37.5Hz_11kN        491                0.996          17.02     17.02        0
+  Bearing2_2   37.5Hz_11kN        161                1.003          15.19     15.19        0
+  Bearing2_3   37.5Hz_11kN        533                1.023          11.57     11.60        0
+  Bearing2_4   37.5Hz_11kN         42                1.039          17.13     17.13        0
+  Bearing2_5   37.5Hz_11kN        339                1.008           9.85      9.85        0
+  Bearing3_1   40Hz_10kN         2538                0.998          22.79     22.79        0
+  Bearing3_2   40Hz_10kN         2496                0.995           6.86      6.86        0
+  Bearing3_3   40Hz_10kN          371                1.042           8.39      8.39        0
+  Bearing3_4   40Hz_10kN         1515                1.009           8.52     11.34        0
+  Bearing3_5   40Hz_10kN          114                1.453          15.82     15.82        0
+
+  last snapshot above 1: 15 of 15 bearings (smallest 4.78, median 13.90, largest 22.79)
+  healthy start, mean relative rms over the bearings: 1.039
+  expectation met: True

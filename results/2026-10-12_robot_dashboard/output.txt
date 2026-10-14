@@ -1,0 +1,31 @@
+ramp_early: 1.9 MB, 5 robots of 850 days, 6 joints, 85 sweeps kept per joint
+  'service due' is flagged 4.0 days after the true service day on average (1 to 9 days, 30 joints)
+ramp_late: 3.3 MB, 5 robots of 1450 days, 6 joints, 145 sweeps kept per joint
+  'service due' is flagged 7.5 days after the true service day on average (-6 to 16 days, 30 joints)
+
+what the probe saw in the early-ramp page (headless Chrome, 1280 px wide):
+  ready                    '1'
+  tiles                    6
+  lines_overview           12
+  start_day                'day 341 of 849'
+  due_at_start             1
+  hover_overview           'Day 4250.511Joint 00.660Joint 10.727Joint 21.028Joint 30.890Joint 41.100Joint 5'
+  hover_gone               ''
+  focus_overview           'Day 3410.371'
+  after_arrow              'Day 3420.377'
+  day_after_click          'day 212 of 849'
+  due_after_click          0
+  title_after_tile         'Joint 4: health index'
+  joint_select             '4'
+  lines_detail             4
+  lines_detail_with_key    6
+  tile_with_key            True
+  sweep_dots               36
+  hover_sweep              'Day 0 (the joint when new)0.09116 N mfriction torque1.831 rad/sjoint speed'
+  tiles_other_robot        6
+  day_zero                 'day 0 of 849'
+  first_tile_day_zero      '0.00'
+  table_rows               123
+  error                    None
+picture: /Users/johnvu/Documents/robot-pdm/results/robot/dashboard_ramp_early_light.png  (written)
+picture: /Users/johnvu/Documents/robot-pdm/results/robot/dashboard_ramp_early_dark.png  (written)

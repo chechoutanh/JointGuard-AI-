@@ -1,0 +1,26 @@
+1. Planned duty = level 0.6 x day of the week x spell. Days 0 to 2 are Monday to Wednesday of a normal spell:
+   0.6 x 1.12 x 1.0 = 0.6720        schedule.csv: [0.672, 0.672, 0.672]
+
+2. Wear of joint 3 grows by K_WEAR x rate x actual duty = (1/480) x 1.24 x actual duty
+   day  planned   actual  added by hand  wear by hand  ground_truth.csv
+     0   0.6720   0.6763       0.001747      0.001747          0.001747
+     1   0.6720   0.6457       0.001668      0.003415          0.003415
+     2   0.6720   0.7420       0.001917      0.005332          0.005332
+
+3. Temperature: settles at 26 + 15 x actual duty x 0.7; each day covers 0.7 of the way. Starts at 26.
+   day  settles at   by hand  sweeps.parquet
+     0     33.1015   30.9711         30.9711
+     1     32.7795   32.2370         32.2370
+     2     33.7909   33.3247         33.3247
+
+4. What the model may see: one row of sweeps.parquet (day 0, fastest speed)
+   day              0
+   joint            3
+   v_target         1.04
+   v_measured       1.032234409116123
+   friction_torque  2.4534411090206585
+   temperature_c    30.971068537886595
+   posture_q        [ 0.   0.5  0.  -1.2  0.   0.8  0. ]
+   payload_kg       0.0
+   duty_planned     0.672
+   no wear column: True

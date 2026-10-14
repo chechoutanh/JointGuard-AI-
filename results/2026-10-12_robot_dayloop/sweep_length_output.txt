@@ -1,0 +1,5 @@
+settle s record s s per day  largest change of Fc  largest change of the health index at wear 0.8
+    0.50     0.50      1.51               0.0e+00                                         0.0e+00
+    0.20     0.20      0.58               5.7e-07                                         4.7e-07
+    0.10     0.10      0.29               7.5e-07                                         6.2e-07
+    0.05     0.05      0.15               8.3e-07                                         6.9e-07

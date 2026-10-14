@@ -1,0 +1,14 @@
+name: pdm
+channels:
+  - conda-forge
+  - nodefaults        # one channel only, so every machine resolves the same packages
+dependencies:
+  - python=3.10
+  - numpy
+  - scipy
+  - pandas
+  - scikit-learn
+  - matplotlib-base   # matplotlib without the Qt backend: this project uses no PyQt
+  - pybullet
+  - pyarrow           # reads and writes the simulated robot dataset (sweeps.parquet)
+  - pytest

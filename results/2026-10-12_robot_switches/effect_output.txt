@@ -1,0 +1,47 @@
+A. With every switch off, does today's code still write the dataset on disk? (seed 0, first 30 days)
+  sweeps.parquet     identical to the first 30 days on disk: True
+  ground_truth.csv   identical to the first 30 days on disk: True
+
+B. What each switch does, over the same 30 joints (5 robots x 6 joints, early ramp, 850 days)
+   service day: change against the same joint with every switch off; 'never' counts joints that do not reach
+   service in 850 days. Forecast error: predicted minus true service day, in days, with the yardstick
+   described at the top of this file.
+                          true service day      health index  forecast at half of life     forecast at 3/4 of life     sweeps
+  switched on         mean change  largest never       error mean |err|    mean    worst mean |err|    mean    worst  missing
+  every switch off           +0.0       +0     0      0.0028        3.0    +1.8      -13        3.1    +2.3       +7     0.0%
+  WEAR_NOISE                 -0.1       -4     0      0.0028        3.8    +0.8      -12        3.0    +2.0       +8     0.0%
+  WEAR_ACCEL                 -9.6      -20     0      0.0028       11.3   +11.3      +28       12.0   +12.0      +25     0.0%
+  WEAR_AFFECTS_FV            +0.0       +0     0      0.0028        3.0    +1.8      -13        3.1    +2.3       +7     0.0%
+  MODEL_MISMATCH             +0.0       +0     0      0.0028        3.1    +1.8      -13        3.1    +2.4       +7     0.0%
+  SENSOR_FAULTS              +0.0       +0     0      0.0036        3.6    +2.2      -13        3.3    +2.5       +9     2.1%
+  all five on                -9.6      -19     0      0.0036       10.6   +10.5      +28       11.8   +11.8      +25     2.1%
+
+C. What each switch does to the first 30 days of sweeps, against the same joint with every switch off
+  switched on         Fc, largest change  Fv, largest change  offset of the curve, largest (share of Fc)
+  every switch off                 0.00%               0.00%                                        0.1%
+  WEAR_NOISE                       0.35%               0.00%                                        0.1%
+  WEAR_ACCEL                       0.00%               0.00%                                        0.1%
+  WEAR_AFFECTS_FV                  0.00%               3.55%                                        0.1%
+  MODEL_MISMATCH                   0.04%               2.53%                                       15.6%
+  SENSOR_FAULTS                    0.36%               0.79%                                        0.1%
+  all five on                      0.55%               5.81%                                       15.6%
+
+D. The forecast error of every joint, at half of life, days (rows: robot, columns: joint)
+  every switch off
+    robot 0:     +1     +1     +0     -2     -3     -1
+    robot 1:     +8     +0     +2     +2     +1     +0
+    robot 2:     +0     +1     +0     +1     +1     +2
+    robot 3:     +5     +6     +5     +4     +3     +7
+    robot 4:    -13     +1     +0     +4     +8     +9
+  WEAR_ACCEL
+    robot 0:    +15    +12    +11     +5     +4     +4
+    robot 1:    +28    +11     +8     +8     +9     +8
+    robot 2:    +12    +11    +10     +7     +9     +6
+    robot 3:    +16    +19    +16    +11    +11    +16
+    robot 4:     +5    +11    +10    +11    +17    +18
+  all five on
+    robot 0:    +10     +9    +16     -1     +5     +4
+    robot 1:    +28     +6     +7     +9     +5     +4
+    robot 2:    +12    +12    +19     +7     +9     +6
+    robot 3:    +19    +17    +18    +11     +7    +16
+    robot 4:     +7     +4    +13     +9    +15    +13

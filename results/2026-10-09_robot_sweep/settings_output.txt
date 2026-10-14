@@ -1,0 +1,29 @@
+joint inertia at the posture (kg m^2): 1.5420 2.5236 0.4908 0.5256 0.0167 0.0108 0.0006
+relative to joint 3                  : 2.9338 4.8014 0.9338 1.0000 0.0318 0.0206 0.0011
+
+A. Fitted friction against injected friction, joints 0 to 5 (worst joint of each case)
+  friction, hold, loop rate                         Fc ok  Fc error  Fv error  max lag held rad/s points fitted
+  same,  diagonal, 600 /s, damping left in (brief) 3 of 6   9999.0%   9999.0%   100.0%   100.0000      0 to 18
+  same,  diagonal, 600 /s                          3 of 6   9999.0%   9999.0%   100.0%   100.0000      0 to 18
+  same,  diagonal, 120 /s                          4 of 6   1707.7%   1465.2%    89.5%   100.0000      2 to 16
+  sized, diagonal,  60 /s                          5 of 6     73.1%    842.3%    94.6%   100.0000     13 to 16
+  sized, diagonal, 120 /s                          5 of 6     57.8%   2173.0%    92.9%   100.0000     15 to 16
+  sized, diagonal, 240 /s                          3 of 6    340.3%   2284.0%    47.0%   100.0000     16 to 18
+  sized, diagonal, 600 /s                          3 of 6   9999.0%   9999.0%   100.0%   100.0000      0 to 18
+  sized, full,     600 /s                          6 of 6      1.0%      2.0%    26.4%     0.1822     16 to 16
+  same,  locked,   600 /s                          6 of 6      0.3%      1.4%    83.4%     0.0008     10 to 16
+  sized, locked,   600 /s                          6 of 6      0.3%      1.4%     5.9%     0.0003     16 to 16
+  sized, locked,   600 /s, damping left in         6 of 6      0.7%   4419.0%    10.2%     0.0003     16 to 16
+  sized, locked,   600 /s, grid from 0.10 (used)   6 of 6      0.4%      1.9%     4.6%     0.0003     18 to 18
+
+B. No friction injected, sized/locked/600: largest torque read on any joint (should be 0)
+  6.59e-06 N m
+
+C. Lowest target speed: how many of the 18 points the fit can use (joint 3, sized/locked/600)
+  grid from              joint state  slowest measured / rated  points fitted
+       0.08                new, 35 C                    0.0753             16
+       0.08           wear 0.8, 35 C                    0.0699             16
+       0.08           wear 1.0, 15 C                    0.0666             16
+       0.10                new, 35 C                    0.0954             18
+       0.10           wear 0.8, 35 C                    0.0901             18
+       0.10           wear 1.0, 15 C                    0.0869             18

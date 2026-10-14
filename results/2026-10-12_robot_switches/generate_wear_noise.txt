@@ -1,0 +1,7 @@
+pybullet build time: Oct 21 2025 17:40:50
+simulation only: ramp_early, 850 days, 5 runs, switched on: WEAR_NOISE
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_noise/run_0  (seed 0, 527 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_noise/run_1  (seed 1, 557 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_noise/run_2  (seed 2, 550 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_noise/run_3  (seed 3, 566 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_noise/run_4  (seed 4, 556 s)

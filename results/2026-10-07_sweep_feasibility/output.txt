@@ -1,0 +1,24 @@
+joint inertia at the test posture (kg m^2): 1.5420 2.5236 0.4908 0.5256 0.0167 0.0108 0.0006
+largest over smallest: 4183x
+
+A. no friction injected: what the sweep of joint 3 reads (should be 0)
+   URDF damping left as loaded: Fc -0.0023 N m, Fv +0.5320 N m s/rad
+   URDF damping set to 0     : Fc +0.0000 N m, Fv -0.0000 N m s/rad
+
+B. friction injected: worst error of the fitted Fc over the 7 joints
+   friction scaled by joint inertia, full mass matrix      worst error    0.3%, joints within 2%: 7/7, held joints move up to   0.09 rad/s
+   friction scaled by joint inertia, diagonal gains only   worst error   87.0%, joints within 2%: 6/7, held joints move up to 100.00 rad/s
+   same friction on every joint (Fc 2), full mass matrix   worst error  126.0%, joints within 2%: 4/7, held joints move up to  20.66 rad/s
+
+C. wear 0.5 on joint 3 only: health index of each joint (should be 0.5 for joint 3, 0 elsewhere)
+   joint 0: -0.0000
+   joint 1: -0.0001
+   joint 2: +0.0000
+   joint 3: +0.4999
+   joint 4: -0.0000
+   joint 5: -0.0000
+   joint 6: +0.0000
+
+D. 0.17 s of computer time per sweep (18 velocities, 9000 steps)
+   7 joints x 365 days: 7 minutes
+   largest joint travel in one velocity step: 0.60 rad (limits are 2.09 rad or more)

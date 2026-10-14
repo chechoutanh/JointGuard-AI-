@@ -1,0 +1,16 @@
+Bearing1_1: 123 snapshots, 0 missing readings, 1 s
+Bearing1_2: 161 snapshots, 0 missing readings, 1 s
+Bearing1_3: 158 snapshots, 0 missing readings, 1 s
+Bearing1_4: 122 snapshots, 0 missing readings, 1 s
+Bearing1_5: 52 snapshots, 0 missing readings, 0 s
+Bearing2_1: 491 snapshots, 0 missing readings, 4 s
+Bearing2_2: 161 snapshots, 0 missing readings, 1 s
+Bearing2_3: 533 snapshots, 0 missing readings, 4 s
+Bearing2_4: 42 snapshots, 0 missing readings, 0 s
+Bearing2_5: 339 snapshots, 0 missing readings, 2 s
+Bearing3_1: 2538 snapshots, 0 missing readings, 19 s
+Bearing3_2: 2496 snapshots, 0 missing readings, 19 s
+Bearing3_3: 371 snapshots, 0 missing readings, 3 s
+Bearing3_4: 1515 snapshots, 0 missing readings, 11 s
+Bearing3_5: 114 snapshots, 0 missing readings, 1 s
+/Users/johnvu/opt/anaconda3/envs/pdm/bin/python -m tools.features xjtu  55.79s user 6.90s system 91% cpu 1:08.86 total

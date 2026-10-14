@@ -1,0 +1,12 @@
+1. This run's wear rate of joint 3
+   nominal rate 1.24 x this run's factor 1.0329 = 1.2808
+
+2. Wear on day 9 = rate x (work done on days 0 to 9) / 480
+   work done, day by day: 0.6763 + 0.6457 + 0.7420 + 0.6738 + 0.6004 + 0.5671 + 0.3733 + 0.7841 + 0.5825 + 0.5265 = 6.1717
+   by hand: 1.2808 x 6.1717 / 480 = 0.016467        ground_truth.csv: 0.016467
+
+3. Service day = the first day the wear is at or past 0.8
+   work needed: 0.8 x 480 / 1.2808 = 299.82
+   work done by the end of day 500: 299.47 (not yet); by the end of day 501: 300.26 (reached)
+   by hand: day 501        ground_truth.csv: day 501
+   with the nominal rate 1.24 it would have been day 517

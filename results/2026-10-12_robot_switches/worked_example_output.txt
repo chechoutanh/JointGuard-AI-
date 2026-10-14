@@ -1,0 +1,17 @@
+1. WEAR_ACCEL: a day's wear is multiplied by 1 + 1.5 x (wear - 0.6) once the wear is past 0.6
+   one day of work 0.6 on a joint of rate 1: clean rule 1 x 0.6 / 480 = 0.001250
+   wear so far 0.5: factor 1.00, by hand 0.001250, wear_growth 0.001250
+   wear so far 0.7: factor 1.15, by hand 0.001437, wear_growth 0.001437
+   wear so far 0.8: factor 1.30, by hand 0.001625, wear_growth 0.001625
+
+2. MODEL_MISMATCH: every link 3% heavier than the model thinks. Joint 1, new, no noise.
+   gravity on joint 1 by the model: -33.08 N m. The motor has to hold 3% more: 0.03 x -33.08 = -0.992 N m
+                       torque at -1.2 rad/s  at +1.2 rad/s  mean of all 18  fitted Fc  fitted Fv
+   model is right                   -11.787         11.787          -0.000     8.6530     2.6242
+   links 3% heavier                 -12.722         10.745          -0.990     8.6565     2.5727
+   both directions move by about the same amount (-0.935 and -1.043 N m),
+   so the mean moves (-0.990) and the fitted Fc hardly does (+0.04%)
+
+3. SENSOR_FAULTS: every reading is rounded to 0.01 N m on joint 3
+   1.8734 -> 1.87, 1.9577 -> 1.96, 2.1099 -> 2.11
+   a wild reading is 0.2 N m off, either way: 1.8734 -> 2.07, 1.9577 -> 2.16, 2.1099 -> 1.91

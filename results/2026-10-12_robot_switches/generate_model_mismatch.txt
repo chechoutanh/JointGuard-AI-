@@ -1,0 +1,7 @@
+pybullet build time: Oct 21 2025 17:40:50
+simulation only: ramp_early, 850 days, 5 runs, switched on: MODEL_MISMATCH
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/model_mismatch/run_0  (seed 0, 529 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/model_mismatch/run_1  (seed 1, 561 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/model_mismatch/run_2  (seed 2, 551 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/model_mismatch/run_3  (seed 3, 572 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/model_mismatch/run_4  (seed 4, 557 s)

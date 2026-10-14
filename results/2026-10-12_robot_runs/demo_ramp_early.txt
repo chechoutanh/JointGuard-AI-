@@ -1,0 +1,12 @@
+simulation only: scenario ramp_early, 850 days, 5 run(s) from seed 0
+wrote /Users/johnvu/Documents/robot-pdm/data/simulation/ramp_early/run_0  (seed 0, 91800 rows, 9007 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/simulation/ramp_early/run_1  (seed 1, 91800 rows, 269 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/simulation/ramp_early/run_2  (seed 2, 91800 rows, 276 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/simulation/ramp_early/run_3  (seed 3, 91800 rows, 301 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/simulation/ramp_early/run_4  (seed 4, 91800 rows, 320 s)
+in each folder:
+  sweeps.parquet     one row per day, joint and speed. This is the dataset; it holds no wear
+  schedule.csv       the planned duty of each day
+  actual_duty.csv    the duty that really happened
+  events.csv         maintenance events
+  ground_truth.csv   the hidden wear and each joint's service day: the answer key, not for a model

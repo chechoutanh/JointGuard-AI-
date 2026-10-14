@@ -1,0 +1,7 @@
+pybullet build time: Oct 21 2025 17:40:50
+simulation only: ramp_early, 850 days, 5 runs, switched on: WEAR_AFFECTS_FV
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_affects_fv/run_0  (seed 0, 533 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_affects_fv/run_1  (seed 1, 561 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_affects_fv/run_2  (seed 2, 552 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_affects_fv/run_3  (seed 3, 570 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/wear_affects_fv/run_4  (seed 4, 556 s)

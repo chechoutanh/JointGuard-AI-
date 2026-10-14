@@ -1,0 +1,49 @@
+
+leave one bearing out: 15 bearings, 15 folds
+  predictor        MAE beat 0.250 near-fail recall hours err % of left rank within triage coverage  width
+  constant 0.5   0.252    0 of 15             0.00      1.33       83%        0.00   0.50     0.90   0.90
+  elapsed time   0.317    3 of 15             0.47      3.08      112%        0.86   0.66     0.87   0.73
+  rms only       0.200   10 of 15             0.37      1.11       71%        0.70   0.68     0.86   0.69
+
+  MAE of each bearing
+  bearing      condition     life h  constant 0.5  elapsed time      rms only
+  Bearing1_1   35Hz_12kN       2.03         0.252         0.255         0.150
+  Bearing1_2   35Hz_12kN       2.67         0.252         0.179         0.180
+  Bearing1_3   35Hz_12kN       2.62         0.252         0.185         0.091
+  Bearing1_4   35Hz_12kN       2.02         0.252         0.257         0.331
+  Bearing1_5   35Hz_12kN       0.85         0.255         0.398         0.166
+  Bearing2_1   37.5Hz_11kN     8.17         0.251         0.336         0.229
+  Bearing2_2   37.5Hz_11kN     2.67         0.252         0.179         0.173
+  Bearing2_3   37.5Hz_11kN     8.87         0.250         0.349         0.092
+  Bearing2_4   37.5Hz_11kN     0.68         0.256         0.418         0.098
+  Bearing2_5   37.5Hz_11kN     5.63         0.251         0.263         0.180
+  Bearing3_1   40Hz_10kN      42.28         0.250         0.468         0.311
+  Bearing3_2   40Hz_10kN      41.58         0.250         0.468         0.178
+  Bearing3_3   40Hz_10kN       6.17         0.251         0.283         0.256
+  Bearing3_4   40Hz_10kN      25.23         0.250         0.447         0.253
+  Bearing3_5   40Hz_10kN       1.88         0.252         0.273         0.301
+
+leave one condition out: 15 bearings, 3 folds
+  predictor        MAE beat 0.250 near-fail recall hours err % of left rank within triage coverage  width
+  constant 0.5   0.252    0 of 15             0.00      1.33       83%        0.00   0.50     0.90   0.90
+  elapsed time   0.329    2 of 15             0.53      4.50      100%        0.86   0.65     0.74   0.62
+  rms only       0.203   10 of 15             0.43      1.20       66%        0.72   0.70     0.83   0.67
+
+  MAE of each bearing
+  bearing      condition     life h  constant 0.5  elapsed time      rms only
+  Bearing1_1   35Hz_12kN       2.03         0.252         0.358         0.159
+  Bearing1_2   35Hz_12kN       2.67         0.252         0.314         0.150
+  Bearing1_3   35Hz_12kN       2.62         0.252         0.317         0.099
+  Bearing1_4   35Hz_12kN       2.02         0.252         0.359         0.295
+  Bearing1_5   35Hz_12kN       0.85         0.255         0.441         0.170
+  Bearing2_1   37.5Hz_11kN     8.17         0.251         0.338         0.217
+  Bearing2_2   37.5Hz_11kN     2.67         0.252         0.005         0.193
+  Bearing2_3   37.5Hz_11kN     8.87         0.250         0.350         0.111
+  Bearing2_4   37.5Hz_11kN     0.68         0.256         0.371         0.112
+  Bearing2_5   37.5Hz_11kN     5.63         0.251         0.265         0.163
+  Bearing3_1   40Hz_10kN      42.28         0.250         0.469         0.338
+  Bearing3_2   40Hz_10kN      41.58         0.250         0.468         0.173
+  Bearing3_3   40Hz_10kN       6.17         0.251         0.285         0.270
+  Bearing3_4   40Hz_10kN      25.23         0.250         0.447         0.307
+  Bearing3_5   40Hz_10kN       1.88         0.252         0.144         0.295
+/Users/johnvu/opt/anaconda3/envs/pdm/bin/python -W error -m tools.rul evaluat  0.31s user 0.09s system 64% cpu 0.607 total

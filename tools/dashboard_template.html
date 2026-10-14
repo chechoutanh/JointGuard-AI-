@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulated robot: joint health</title>
+<style>
+/* Colours by role. Six joint colours in a fixed order (joint 0 is always the first), one more for the work done. */
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11, 11, 11, 0.10);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #6250d6;
+  --critical: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255, 255, 255, 0.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255, 255, 255, 0.10);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 20px 16px 40px; }
+h1 { font-size: 20px; margin: 0 0 2px; font-weight: 600; }
+h2 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+.sub { font-size: 12.5px; color: var(--ink2); margin: 0 0 8px; }
+.notice { margin: 10px 0 14px; padding: 8px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: flex-end; margin-bottom: 12px; }
+.controls label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--ink2); }
+.controls .grow { flex: 1 1 260px; }
+.controls .check { flex-direction: row; align-items: center; gap: 6px; font-size: 13px; color: var(--ink); padding-bottom: 3px; }
+.controls output { color: var(--ink); font-weight: 600; margin-left: 4px; }
+select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--axis); border-radius: 6px; padding: 4px 6px; }
+input[type="range"] { width: 100%; accent-color: var(--ink2); }
+[hidden] { display: none !important; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 12px; }
+.tile { font: inherit; color: inherit; text-align: left; cursor: pointer; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.tile[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: -1px; }
+.tile .name { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink2); }
+.swatch { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.tile .value { font-size: 28px; font-weight: 600; line-height: 1.25; }
+.meter { height: 6px; border-radius: 3px; margin: 6px 0 7px; overflow: hidden; background: color-mix(in oklab, var(--fill) 22%, var(--surface)); }
+.meter i { display: block; height: 100%; border-radius: 3px; background: var(--fill); }
+.tile .note { font-size: 12px; color: var(--ink2); }
+.tile .status { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-top: 12px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 0 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 12.5px; color: var(--ink2); margin: 2px 0 4px; }
+.legend button, .legend span.item { font: inherit; color: inherit; background: none; border: 0; padding: 2px 5px; border-radius: 5px; display: inline-flex; align-items: center; gap: 6px; }
+.legend button { cursor: pointer; }
+.legend button[aria-pressed="true"] { color: var(--ink); font-weight: 600; background: color-mix(in oklab, var(--ink) 7%, transparent); }
+.key { display: inline-block; flex: none; }
+.key.line { width: 14px; height: 2px; border-radius: 1px; }
+.key.dot { width: 8px; height: 8px; border-radius: 50%; }
+
+svg { display: block; }
+svg text { fill: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+svg text.lab { fill: var(--ink2); paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }   /* a halo, so a line never cuts through a label */
+svg .grid { stroke: var(--grid); stroke-width: 1; }
+svg .axis { stroke: var(--axis); stroke-width: 1; }
+svg .mark { stroke: var(--axis); stroke-width: 1; }
+svg .limit { stroke: var(--critical); stroke-width: 1; }
+svg .cursor { stroke: var(--ink2); stroke-width: 1; }
+svg .cross { stroke: var(--muted); stroke-width: 1; }
+svg .series { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+svg .dot, svg .pt { stroke: var(--surface); stroke-width: 2; }
+svg:focus-visible { outline: 2px solid var(--ink2); outline-offset: 2px; border-radius: 4px; }
+
+#tip { position: absolute; display: none; pointer-events: none; z-index: 10; min-width: 150px; padding: 8px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14); font-size: 12.5px; }
+#tip .head { color: var(--ink2); margin-bottom: 4px; }
+#tip .row { display: flex; align-items: center; gap: 8px; color: var(--ink2); }
+#tip .row b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+details.table { margin-top: 6px; font-size: 12.5px; }
+details.table summary { cursor: pointer; color: var(--ink2); }
+details.table .scroll { max-height: 260px; overflow: auto; margin-top: 6px; }
+table { border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th, td { padding: 2px 12px 2px 0; text-align: right; white-space: nowrap; }
+th { color: var(--ink2); font-weight: 600; position: sticky; top: 0; background: var(--surface); }
+footer { margin-top: 18px; font-size: 13px; color: var(--ink2); }
+footer p { margin: 0 0 6px; }
+</style>
+</head>
+<body>
+<svg id="ns" width="0" height="0" aria-hidden="true" style="position:absolute"></svg>
+<div id="tip" role="status"></div>
+<main>
+  <header>
+    <h1>Simulated robot: joint health</h1>
+    <p class="sub">Scenario <span id="scenario"></span>. Every joint is swept once a day; this page shows what those sweeps say.</p>
+    <p class="notice"><strong>Simulation only.</strong> The wear of every joint is set by the simulation and read back from its own friction sweeps. Nothing on this page was measured on a robot.</p>
+  </header>
+
+  <section class="controls" aria-label="Filters">
+    <label>Robot <select id="run"></select></label>
+    <label>Joint for the detail charts <select id="joint"></select></label>
+    <label class="grow"><span>Show the robot as of <output id="dayOut" for="day"></output></span><input id="day" type="range" min="0" step="1"></label>
+    <label class="check" id="truthBox" hidden><input id="truth" type="checkbox"> Show the answer key (the hidden wear)</label>
+  </section>
+
+  <section class="tiles" id="tiles" aria-label="Health index of each joint on the chosen day"></section>
+
+  <section class="card">
+    <h2>Health index of every joint</h2>
+    <p class="sub">0 is a new joint; service is due at <span class="threshold"></span>. Read from each day's friction sweep, with the temperature effect taken out. Days after the chosen day are faded. The axis stops at 1.2: nothing is serviced in these runs, so the lines keep rising. Click the chart to choose a day.</p>
+    <div class="legend" id="legendAll"></div>
+    <div id="chartAll"></div>
+    <details class="table" id="tableAll"><summary>Show as a table (every 7th day)</summary><div class="scroll"></div></details>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2 id="titleOne"></h2>
+      <p class="sub">The grey line is the same index without taking temperature out. A warm joint has less friction, so on busy days it reads low.</p>
+      <div class="legend" id="legendOne"></div>
+      <div id="chartOne"></div>
+      <details class="table" id="tableOne"><summary>Show as a table (every 7th day)</summary><div class="scroll"></div></details>
+    </section>
+    <section class="card">
+      <h2 id="titleSweep"></h2>
+      <p class="sub">Each dot is one speed of the health check: friction torque (N m) against joint speed (rad/s). Wear pushes both halves of the curve away from zero. One sweep is kept every <span class="every"></span>th day.</p>
+      <div class="legend" id="legendSweep"></div>
+      <div id="chartSweep"></div>
+      <details class="table" id="tableSweep"><summary>Show as a table</summary><div class="scroll"></div></details>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Workload</h2>
+      <p class="sub">1 is a full day of work. Mean of the last 7 days.</p>
+      <div class="legend" id="legendDuty"></div>
+      <div id="chartDuty"></div>
+      <details class="table" id="tableDuty"><summary>Show as a table (every 7th day)</summary><div class="scroll"></div></details>
+    </section>
+    <section class="card">
+      <h2 id="titleTemp"></h2>
+      <p class="sub">At the daily health check, in deg C. Mean of the last 7 days.</p>
+      <div id="chartTemp"></div>
+      <details class="table" id="tableTemp"><summary>Show as a table (every 7th day)</summary><div class="scroll"></div></details>
+    </section>
+  </div>
+
+  <footer>
+    <p><strong>What this page does not show.</strong> It has no forecast of the service day: that part is not built. It says nothing about a real robot.</p>
+    <p>The health index is (Coulomb friction / the joint's own first week - 1) / 1.5. It uses the simulation's own wear gain and temperature coefficient, which a real system would have to estimate. Made by <code>python -m tools.dashboard</code>.</p>
+  </footer>
+</main>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function () {
+  'use strict';
+  window.addEventListener('error', function (e) { document.body.setAttribute('data-error', e.message || 'error'); });
+
+  var DATA = JSON.parse(document.getElementById('data').textContent);
+  var NS = document.getElementById('ns').namespaceURI;
+  // a view can be opened directly: dashboard.html?run=2&joint=4&day=600&truth=1&theme=dark
+  var query = new URLSearchParams(location.search);
+  var theme = query.get('theme');
+  if (theme === 'dark' || theme === 'light') document.documentElement.setAttribute('data-theme', theme);
+  function asked(name, lo, hi) {
+    var n = Number(query.get(name));
+    return query.get(name) != null && Number.isInteger(n) && n >= lo && n <= hi ? n : null;
+  }
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, attrs, text) {
+    var node = document.createElement(tag);
+    for (var k in attrs || {}) node.setAttribute(k, attrs[k]);
+    if (text != null) node.textContent = text;
+    return node;
+  }
+  function sv(tag, attrs, text) {
+    var node = document.createElementNS(NS, tag);
+    for (var k in attrs || {}) node.setAttribute(k, attrs[k]);
+    if (text != null) node.textContent = text;
+    return node;
+  }
+  // colour follows the joint's number, never its place in a list
+  function jointColor(j) { return j < 6 ? 'var(--s' + (j + 1) + ')' : 'var(--muted)'; }
+
+  var state = { run: 0, joint: 0, day: 0, truth: false };
+  function run() { return DATA.runs[state.run]; }
+  function jointData(j) { return run().joints.filter(function (x) { return x.joint === j; })[0] || run().joints[0]; }
+
+  // the last value on or before a day: a day without a sweep shows the sweep before it
+  function lastAt(values, day) {
+    for (var d = Math.min(day, values.length - 1); d >= 0; d--) if (values[d] != null) return { day: d, value: values[d] };
+    return null;
+  }
+  function firstReach(values, limit, upTo) {
+    for (var d = 0; d <= Math.min(upTo, values.length - 1); d++) if (values[d] != null && values[d] >= limit) return d;
+    return null;
+  }
+  // mean of the last n days, using only days up to that day
+  function trailingMean(values, n) {
+    return values.map(function (_, i) {
+      var sum = 0, count = 0;
+      for (var d = Math.max(0, i - n + 1); d <= i; d++) if (values[d] != null) { sum += values[d]; count++; }
+      return count ? sum / count : null;
+    });
+  }
+  function ticks(lo, hi, count) {
+    var raw = (hi - lo) / Math.max(1, count);
+    var mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    var norm = raw / mag;
+    var step = (norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10) * mag;
+    var out = [];
+    for (var t = Math.ceil(lo / step - 1e-9) * step; t <= hi + 1e-9; t += step) out.push(Math.abs(t) < step * 1e-6 ? 0 : t);
+    return { values: out, digits: Math.max(0, -Math.floor(Math.log10(step) + 1e-9)) };
+  }
+
+  var tip = $('tip');
+  function showTip(clientX, clientY, head, rows) {
+    tip.replaceChildren(el('div', { 'class': 'head' }, head));
+    rows.forEach(function (r) {
+      var row = el('div', { 'class': 'row' });
+      var key = el('span', { 'class': 'key ' + (r.dot ? 'dot' : 'line') });
+      key.style.background = r.color;
+      row.append(key, el('b', null, r.value), el('span', null, r.name));
+      tip.append(row);
+    });
+    tip.style.display = 'block';
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    var x = clientX + 14, y = clientY - h - 10;
+    if (x + w > document.documentElement.clientWidth - 8) x = clientX - w - 14;
+    if (y < 8) y = clientY + 14;
+    tip.style.left = (Math.max(8, x) + window.scrollX) + 'px';
+    tip.style.top = (y + window.scrollY) + 'px';
+  }
+  function hideTip() { tip.style.display = 'none'; }
+
+  function legend(host, items, onPick, picked) {
+    host.replaceChildren();
+    items.forEach(function (it) {
+      var node = onPick ? el('button', { type: 'button', 'aria-pressed': String(it.id === picked) }) : el('span', { 'class': 'item' });
+      var key = el('span', { 'class': 'key ' + (it.dot ? 'dot' : 'line') });
+      key.style.background = it.color;
+      node.append(key, document.createTextNode(it.name));
+      if (onPick) node.addEventListener('click', function () { onPick(it.id); });
+      host.append(node);
+    });
+  }
+
+  function table(details, columns, rows) {
+    var box = details.querySelector('.scroll');
+    var t = el('table'), head = el('tr');
+    columns.forEach(function (c) { head.append(el('th', null, c)); });
+    t.append(head);
+    rows.forEach(function (r) {
+      var tr = el('tr');
+      r.forEach(function (c) { tr.append(el('td', null, c)); });
+      t.append(tr);
+    });
+    box.replaceChildren(t);
+  }
+  function seriesTable(details, cfg) {
+    var rows = [];
+    for (var d = 0; d < cfg.days; d += 7) {
+      rows.push([String(d)].concat(cfg.series.map(function (s) { return s.values[d] == null ? '' : s.values[d].toFixed(s.digits); })));
+    }
+    table(details, ['Day'].concat(cfg.series.map(function (s) { return s.name; })), rows);
+  }
+
+  var uid = 0;
+  // Lines over days. One crosshair and one tooltip for every series; click or Enter chooses a day.
+  function lineChart(host, cfg) {
+    var W = Math.max(300, Math.floor(host.clientWidth)), H = cfg.height || 240;
+    var m = { l: 44, r: 16, t: 12, b: 34 };
+    var iw = W - m.l - m.r, ih = H - m.t - m.b, last = cfg.days - 1;
+    var lo = cfg.yMin, hi = cfg.yMax;
+    if (lo == null || hi == null) {
+      var a = Infinity, b = -Infinity;
+      cfg.series.forEach(function (s) { s.values.forEach(function (v) { if (v != null) { if (v < a) a = v; if (v > b) b = v; } }); });
+      if (!isFinite(a)) { a = 0; b = 1; }
+      var pad = (b - a) * 0.08 || 1;
+      if (lo == null) lo = cfg.zero ? 0 : a - pad;
+      if (hi == null) hi = b + 3 * pad;                        // room above the data for the marker labels
+    }
+    function X(d) { return m.l + (last > 0 ? d / last : 0) * iw; }
+    function Y(v) { return m.t + ih - (v - lo) / (hi - lo) * ih; }
+
+    var svg = sv('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img', tabindex: 0, 'aria-label': cfg.label });
+    var id = 'clip' + (++uid), defs = sv('defs');
+    var xc = cfg.cursor == null ? m.l + iw : X(cfg.cursor);
+    [['a', m.l, xc], ['b', xc, m.l + iw]].forEach(function (part) {
+      var clip = sv('clipPath', { id: id + part[0] });
+      clip.append(sv('rect', { x: part[1], y: m.t, width: Math.max(0, part[2] - part[1]), height: ih }));
+      defs.append(clip);
+    });
+    svg.append(defs);
+
+    var yt = ticks(lo, hi, 5);
+    yt.values.forEach(function (t) {
+      svg.append(sv('line', { x1: m.l, x2: m.l + iw, y1: Y(t), y2: Y(t), 'class': 'grid' }));
+      svg.append(sv('text', { x: m.l - 7, y: Y(t) + 4, 'text-anchor': 'end' }, t.toFixed(yt.digits)));
+    });
+    svg.append(sv('line', { x1: m.l, x2: m.l + iw, y1: m.t + ih, y2: m.t + ih, 'class': 'axis' }));
+    ticks(0, last, Math.max(3, Math.floor(iw / 90))).values.forEach(function (t) {
+      if (t % 1 === 0) svg.append(sv('text', { x: X(t), y: m.t + ih + 15, 'text-anchor': 'middle' }, String(t)));
+    });
+    svg.append(sv('text', { x: m.l + iw, y: H - 4, 'text-anchor': 'end', 'class': 'lab' }, 'day'));
+
+    (cfg.vLines || []).forEach(function (v, i) {
+      if (v.day == null || v.day > last) return;
+      var right = X(v.day) > m.l + iw - 170;
+      svg.append(sv('line', { x1: X(v.day), x2: X(v.day), y1: m.t, y2: m.t + ih, 'class': 'mark' }));
+      svg.append(sv('text', { x: X(v.day) + (right ? -5 : 5), y: m.t + 10 + i * 14, 'text-anchor': right ? 'end' : 'start', 'class': 'lab' }, v.label));
+    });
+
+    // drawn last to first, so the first series, the one the chart is about, lies on top
+    cfg.series.slice().reverse().forEach(function (s) {
+      var d = '', pen = false;
+      for (var i = 0; i < s.values.length; i++) {
+        var v = s.values[i];
+        if (v == null) { pen = false; continue; }
+        d += (pen ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1);
+        pen = true;
+      }
+      [['a', 1], ['b', cfg.dim ? 0.3 : 1]].forEach(function (part) {
+        var path = sv('path', { d: d, 'class': 'series', 'clip-path': 'url(#' + id + part[0] + ')', opacity: part[1] });
+        path.style.stroke = s.color;
+        svg.append(path);
+      });
+    });
+
+    (cfg.hLines || []).forEach(function (h) {
+      svg.append(sv('line', { x1: m.l, x2: m.l + iw, y1: Y(h.y), y2: Y(h.y), 'class': 'limit' }));
+      svg.append(sv('text', { x: m.l + 6, y: Y(h.y) - 5, 'class': 'lab' }, h.label));
+    });
+    if (cfg.cursor != null) {
+      var nearEnd = xc > m.l + iw - 70;
+      svg.append(sv('line', { x1: xc, x2: xc, y1: m.t, y2: m.t + ih, 'class': 'cursor' }));
+      svg.append(sv('text', { x: xc + (nearEnd ? -5 : 5), y: m.t + ih - 6, 'text-anchor': nearEnd ? 'end' : 'start', 'class': 'lab' }, 'day ' + cfg.cursor));
+    }
+
+    var cross = sv('line', { y1: m.t, y2: m.t + ih, 'class': 'cross', visibility: 'hidden' });
+    svg.append(cross);
+    var dots = cfg.series.map(function (s) {
+      var c = sv('circle', { r: 4, 'class': 'dot', visibility: 'hidden' });
+      c.style.fill = s.color;
+      svg.append(c);
+      return c;
+    });
+    var hover = null;
+    function at(day, cx, cy) {
+      hover = Math.max(0, Math.min(last, day));
+      cross.setAttribute('x1', X(hover));
+      cross.setAttribute('x2', X(hover));
+      cross.setAttribute('visibility', 'visible');
+      var rows = cfg.series.map(function (s, i) {
+        var v = s.values[hover], inside = v != null && v >= lo && v <= hi;
+        dots[i].setAttribute('visibility', inside ? 'visible' : 'hidden');
+        if (inside) { dots[i].setAttribute('cx', X(hover)); dots[i].setAttribute('cy', Y(v)); }
+        return { color: s.color, value: v == null ? 'no sweep' : v.toFixed(s.digits), name: s.name };
+      });
+      var box = svg.getBoundingClientRect();
+      showTip(cx == null ? box.left + X(hover) : cx, cy == null ? box.top + m.t + 40 : cy, 'Day ' + hover, rows);
+    }
+    function out() {
+      hover = null;
+      cross.setAttribute('visibility', 'hidden');
+      dots.forEach(function (c) { c.setAttribute('visibility', 'hidden'); });
+      hideTip();
+    }
+    function dayAt(e) { return Math.round((e.clientX - svg.getBoundingClientRect().left - m.l) / iw * last); }
+    var pad2 = sv('rect', { x: m.l, y: m.t, width: iw, height: ih, fill: 'transparent' });
+    pad2.addEventListener('pointermove', function (e) { at(dayAt(e), e.clientX, e.clientY); });
+    pad2.addEventListener('pointerleave', out);
+    if (cfg.onPick) {
+      pad2.style.cursor = 'pointer';
+      pad2.addEventListener('click', function (e) { cfg.onPick(Math.max(0, Math.min(last, dayAt(e)))); });
+    }
+    svg.addEventListener('focus', function () { at(cfg.cursor == null ? last : cfg.cursor); });
+    svg.addEventListener('blur', out);
+    svg.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { if (cfg.onPick && hover != null) cfg.onPick(hover); return; }
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      at((hover == null ? 0 : hover) + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 7 : 1));
+    });
+    svg.append(pad2);
+    host.replaceChildren(svg);
+  }
+
+  // One sweep: torque against speed. The pointer only has to be near a dot; arrow keys walk along the dots.
+  function sweepChart(host, cfg) {
+    var W = Math.max(300, Math.floor(host.clientWidth)), H = 240;
+    var m = { l: 48, r: 16, t: 12, b: 34 };
+    var iw = W - m.l - m.r, ih = H - m.t - m.b;
+    var pts = [];
+    function add(s, isBase) { s.v.forEach(function (v, i) { pts.push({ v: v, tau: s.tau[i], base: isBase, day: s.day }); }); }
+    if (cfg.base.day !== cfg.cur.day) add(cfg.base, true);
+    add(cfg.cur, false);
+    var vmax = Math.max.apply(null, pts.map(function (p) { return Math.abs(p.v); })) * 1.08;
+    var tmax = Math.max.apply(null, pts.map(function (p) { return Math.abs(p.tau); })) * 1.15;
+    function X(v) { return m.l + (v + vmax) / (2 * vmax) * iw; }
+    function Y(t) { return m.t + ih - (t + tmax) / (2 * tmax) * ih; }
+
+    var svg = sv('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img', tabindex: 0, 'aria-label': cfg.label });
+    var yt = ticks(-tmax, tmax, 4), xt = ticks(-vmax, vmax, 6);
+    yt.values.forEach(function (t) {
+      svg.append(sv('line', { x1: m.l, x2: m.l + iw, y1: Y(t), y2: Y(t), 'class': t === 0 ? 'axis' : 'grid' }));
+      svg.append(sv('text', { x: m.l - 7, y: Y(t) + 4, 'text-anchor': 'end' }, t.toFixed(yt.digits)));
+    });
+    svg.append(sv('line', { x1: X(0), x2: X(0), y1: m.t, y2: m.t + ih, 'class': 'axis' }));
+    xt.values.forEach(function (t) { svg.append(sv('text', { x: X(t), y: m.t + ih + 15, 'text-anchor': 'middle' }, t.toFixed(xt.digits))); });
+    svg.append(sv('text', { x: m.l + iw, y: H - 4, 'text-anchor': 'end', 'class': 'lab' }, 'joint speed (rad/s)'));
+
+    if (cfg.fc != null && cfg.fv != null) {
+      var speeds = cfg.cur.v.filter(function (v) { return v > 0; });
+      var v0 = Math.min.apply(null, speeds), v1 = Math.max.apply(null, speeds);
+      [1, -1].forEach(function (side) {
+        var line = sv('line', { x1: X(side * v0), y1: Y(side * (cfg.fc + cfg.fv * v0)), x2: X(side * v1), y2: Y(side * (cfg.fc + cfg.fv * v1)), 'class': 'series' });
+        line.style.stroke = cfg.color;
+        svg.append(line);
+      });
+    }
+    var marks = pts.map(function (p) {
+      var c = sv('circle', { cx: X(p.v), cy: Y(p.tau), r: 4, 'class': 'pt' });
+      c.style.fill = p.base ? 'var(--muted)' : cfg.color;
+      svg.append(c);
+      return c;
+    });
+
+    var hover = null;
+    function at(i, cx, cy) {
+      if (hover != null) marks[hover].setAttribute('r', 4);
+      hover = i;
+      var p = pts[i], box = svg.getBoundingClientRect();
+      marks[i].setAttribute('r', 6);
+      showTip(cx == null ? box.left + X(p.v) : cx, cy == null ? box.top + Y(p.tau) : cy,
+              'Day ' + p.day + (p.base ? ' (the joint when new)' : ''),
+              [{ dot: true, color: p.base ? 'var(--muted)' : cfg.color, value: p.tau.toPrecision(4) + ' N m', name: 'friction torque' },
+               { dot: true, color: 'transparent', value: p.v.toFixed(3) + ' rad/s', name: 'joint speed' }]);
+    }
+    function out() { if (hover != null) marks[hover].setAttribute('r', 4); hover = null; hideTip(); }
+    var pad2 = sv('rect', { x: m.l, y: m.t, width: iw, height: ih, fill: 'transparent' });
+    pad2.addEventListener('pointermove', function (e) {
+      var box = svg.getBoundingClientRect(), px = e.clientX - box.left, py = e.clientY - box.top, best = -1, dist = 24 * 24;
+      pts.forEach(function (p, i) {
+        var d = Math.pow(X(p.v) - px, 2) + Math.pow(Y(p.tau) - py, 2);
+        if (d <= dist) { dist = d; best = i; }
+      });
+      if (best < 0) out(); else at(best, e.clientX, e.clientY);
+    });
+    pad2.addEventListener('pointerleave', out);
+    var firstCur = pts.length - cfg.cur.v.length;
+    svg.addEventListener('focus', function () { at(firstCur); });
+    svg.addEventListener('blur', out);
+    svg.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      var next = (hover == null ? firstCur : hover) + (e.key === 'ArrowLeft' ? -1 : 1);
+      at(Math.max(0, Math.min(pts.length - 1, next)));
+    });
+    svg.append(pad2);
+    host.replaceChildren(svg);
+  }
+
+  function warning() {
+    var s = sv('svg', { width: 12, height: 12, viewBox: '0 0 12 12', 'aria-hidden': 'true' });
+    var p = sv('path', { d: 'M6 1 L11.5 11 H0.5 Z' });
+    p.style.fill = 'var(--critical)';
+    s.append(p);
+    return s;
+  }
+
+  function pickJoint(j) { state.joint = j; $('joint').value = String(j); render(); }
+  function pickDay(d) { state.day = d; $('day').value = String(d); render(); }
+
+  // One tile per joint: the index on the chosen day, as a share of the service threshold.
+  function renderTiles() {
+    var host = $('tiles');
+    host.replaceChildren();
+    run().joints.forEach(function (j) {
+      var now = lastAt(j.index, state.day), due = firstReach(j.index, DATA.threshold, state.day);
+      var tile = el('button', { type: 'button', 'class': 'tile', 'aria-pressed': String(j.joint === state.joint) });
+      var name = el('div', { 'class': 'name' }), swatch = el('span', { 'class': 'swatch' });
+      swatch.style.background = jointColor(j.joint);
+      name.append(swatch, document.createTextNode('Joint ' + j.joint));
+      var meter = el('div', { 'class': 'meter' }), fill = el('i');
+      meter.style.setProperty('--fill', due != null ? 'var(--critical)' : jointColor(j.joint));
+      fill.style.width = (now ? Math.max(0, Math.min(1, now.value / DATA.threshold)) * 100 : 0).toFixed(1) + '%';
+      meter.append(fill);
+      tile.append(name, el('div', { 'class': 'value' }, now ? now.value.toFixed(2) : 'no sweep'), meter);
+      if (due != null) {
+        var status = el('div', { 'class': 'status' });
+        status.append(warning(), document.createTextNode('Service due since day ' + due));
+        tile.append(status);
+      } else if (now) {
+        tile.append(el('div', { 'class': 'note' }, Math.max(0, Math.round(now.value / DATA.threshold * 100)) + '% of the service threshold'));
+      }
+      if (now && now.day !== state.day) tile.append(el('div', { 'class': 'note' }, 'no sweep on day ' + state.day + ': this is day ' + now.day));
+      if (state.truth && j.wear) {
+        var service = j.service_day == null ? 'no service day in this run' : 'service day ' + j.service_day;
+        tile.append(el('div', { 'class': 'note' }, 'Answer key: wear ' + j.wear[state.day].toFixed(2) + ', ' + service));
+      }
+      tile.addEventListener('click', function () { pickJoint(j.joint); });
+      host.append(tile);
+    });
+  }
+
+  function render() {
+    var r = run(), days = r.days, sel = jointData(state.joint), color = jointColor(sel.joint);
+    $('dayOut').textContent = 'day ' + state.day + ' of ' + (days - 1);
+    renderTiles();
+
+    var ramp = DATA.ramp_day != null && DATA.ramp_day < days ? [{ day: DATA.ramp_day, label: 'planned workload doubles' }] : [];
+    var limit = [{ y: DATA.threshold, label: 'service threshold ' + DATA.threshold }];
+
+    var all = { days: days, label: 'Health index of every joint by day', yMin: -0.05, yMax: 1.2, height: 300, cursor: state.day, dim: true,
+                onPick: pickDay, hLines: limit, vLines: ramp,
+                series: r.joints.map(function (j) { return { name: 'Joint ' + j.joint, color: jointColor(j.joint), values: j.index, digits: 3 }; }) };
+    lineChart($('chartAll'), all);
+    legend($('legendAll'), r.joints.map(function (j) { return { id: j.joint, name: 'Joint ' + j.joint, color: jointColor(j.joint) }; }), pickJoint, state.joint);
+    seriesTable($('tableAll'), all);
+
+    var showTruth = state.truth && sel.wear;
+    var one = { days: days, label: 'Health index of joint ' + sel.joint + ' by day', yMin: -0.05, yMax: 1.2, cursor: state.day, dim: true,
+                onPick: pickDay, hLines: limit, vLines: ramp.slice(),
+                series: [{ name: 'Temperature taken out', color: color, values: sel.index, digits: 3 },
+                         { name: 'As read', color: 'var(--muted)', values: sel.index_raw, digits: 3 }] };
+    if (showTruth) {
+      one.series.push({ name: 'Hidden wear (answer key)', color: 'var(--ink)', values: sel.wear, digits: 3 });
+      if (sel.service_day != null) one.vLines.push({ day: sel.service_day, label: 'answer key: service day ' + sel.service_day });
+    }
+    $('titleOne').textContent = 'Joint ' + sel.joint + ': health index';
+    lineChart($('chartOne'), one);
+    legend($('legendOne'), one.series.map(function (s) { return { name: s.name, color: s.color }; }));
+    seriesTable($('tableOne'), one);
+
+    if (sel.sweeps.length) {
+      var kept = sel.sweeps.filter(function (s) { return s.day <= state.day; });
+      var cur = kept.length ? kept[kept.length - 1] : sel.sweeps[0], base = sel.sweeps[0];
+      $('titleSweep').textContent = 'Joint ' + sel.joint + ': the sweep of day ' + cur.day;
+      sweepChart($('chartSweep'), { label: 'Friction torque against joint speed, joint ' + sel.joint + ', day ' + cur.day,
+                                    color: color, cur: cur, base: base, fc: sel.fc[cur.day], fv: sel.fv[cur.day] });
+      var keys = [{ name: 'Day ' + cur.day, color: color, dot: true }];
+      if (base.day !== cur.day) keys.push({ name: 'Day ' + base.day + ' (the joint when new)', color: 'var(--muted)', dot: true });
+      keys.push({ name: 'Fitted line', color: color });
+      legend($('legendSweep'), keys);
+      table($('tableSweep'), ['Speed (rad/s)', 'Torque, day ' + cur.day + ' (N m)', 'Torque, day ' + base.day + ' (N m)'],
+            cur.v.map(function (v, i) { return [v.toFixed(3), cur.tau[i].toPrecision(4), base.tau[i] == null ? '' : base.tau[i].toPrecision(4)]; }));
+    } else {
+      $('titleSweep').textContent = 'Joint ' + sel.joint + ': no sweep was kept';
+      $('chartSweep').replaceChildren();
+    }
+
+    var duty = { days: days, label: 'Workload by day, mean of the last 7 days', zero: true, cursor: state.day, dim: true, onPick: pickDay, vLines: ramp,
+                 series: [{ name: 'Actually done', color: 'var(--s7)', values: trailingMean(r.duty_actual, 7), digits: 3 },
+                          { name: 'Planned', color: 'var(--muted)', values: trailingMean(r.duty_planned, 7), digits: 3 }] };
+    lineChart($('chartDuty'), duty);
+    legend($('legendDuty'), duty.series.map(function (s) { return { name: s.name, color: s.color }; }));
+    seriesTable($('tableDuty'), duty);
+
+    var temp = { days: days, label: 'Temperature of joint ' + sel.joint + ' by day, mean of the last 7 days', cursor: state.day, dim: true, onPick: pickDay, vLines: ramp,
+                 series: [{ name: 'Joint ' + sel.joint + ' (deg C)', color: color, values: trailingMean(sel.temp, 7), digits: 1 }] };
+    $('titleTemp').textContent = 'Joint ' + sel.joint + ': temperature';
+    lineChart($('chartTemp'), temp);
+    seriesTable($('tableTemp'), temp);
+  }
+
+  // Start on the first day any joint reaches the threshold: the moment the page is about.
+  function firstDue() {
+    var first = null;
+    run().joints.forEach(function (j) {
+      var d = firstReach(j.index, DATA.threshold, j.index.length - 1);
+      if (d != null && (first == null || d < first)) first = d;
+    });
+    return first == null ? run().days - 1 : first;
+  }
+  function fillJoints() {
+    var select = $('joint');
+    select.replaceChildren();
+    run().joints.forEach(function (j) { select.append(el('option', { value: j.joint }, 'Joint ' + j.joint)); });
+    if (!run().joints.some(function (j) { return j.joint === state.joint; })) state.joint = run().joints[0].joint;
+    select.value = String(state.joint);
+  }
+
+  function init() {
+    $('scenario').textContent = DATA.scenario;
+    Array.prototype.forEach.call(document.querySelectorAll('.threshold'), function (n) { n.textContent = DATA.threshold; });
+    Array.prototype.forEach.call(document.querySelectorAll('.every'), function (n) { n.textContent = DATA.sweep_every; });
+    if (!DATA.runs || !DATA.runs.length) { $('tiles').textContent = 'No runs in this file.'; return; }
+    DATA.runs.forEach(function (r, i) { $('run').append(el('option', { value: i }, 'Robot ' + r.run)); });
+    var wanted = asked('run', 0, DATA.runs.length - 1);
+    if (wanted != null) { state.run = wanted; $('run').value = String(wanted); }
+    wanted = asked('joint', 0, 99);
+    if (wanted != null) state.joint = wanted;
+    fillJoints();
+    wanted = asked('day', 0, run().days - 1);
+    state.day = wanted != null ? wanted : firstDue();
+    $('day').max = String(run().days - 1);
+    $('day').value = String(state.day);
+    if (DATA.truth) {
+      $('truthBox').hidden = false;
+      if (query.get('truth') === '1') { state.truth = true; $('truth').checked = true; }
+    }
+
+    $('run').addEventListener('change', function (e) {
+      state.run = Number(e.target.value);
+      fillJoints();
+      $('day').max = String(run().days - 1);
+      state.day = Math.min(state.day, run().days - 1);
+      $('day').value = String(state.day);
+      render();
+    });
+    $('joint').addEventListener('change', function (e) { pickJoint(Number(e.target.value)); });
+    $('day').addEventListener('input', function (e) { state.day = Number(e.target.value); render(); });
+    $('truth').addEventListener('change', function (e) { state.truth = e.target.checked; render(); });
+    var timer = null;
+    window.addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(render, 120); });
+    render();
+  }
+
+  init();
+  document.body.setAttribute('data-ready', '1');
+})();
+</script>
+</body>
+</html>

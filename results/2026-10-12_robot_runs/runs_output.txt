@@ -1,0 +1,49 @@
+
+ramp_early: 5 runs of 850 days, 459000 sweep rows, 9.5 MB of sweeps.parquet
+  each joint's wear rate in each run, as a multiple of its nominal rate (from ground truth and work done)
+    run  joint 0  joint 1  joint 2  joint 3  joint 4  joint 5
+      0     0.90     0.94     0.85     1.03     0.78     0.86
+      1     0.83     1.12     1.09     0.96     1.17     0.90
+      2     1.06     1.12     0.99     1.24     0.86     1.25
+      3     1.02     0.78     0.86     0.99     0.99     1.04
+      4     0.67     1.20     0.92     0.93     0.87     0.98
+  service day of each joint in each run (first day the true wear is at or past the threshold)
+    run  joint 0  joint 1  joint 2  joint 3  joint 4  joint 5  wear at end, highest
+      0      604      491      452      352      385      336                  2.55
+      1      659      427      378      371      297      329                  3.06
+      2      535      424      399      311      364      257                  3.72
+      3      541      554      445      360      329      288                  3.14
+      4      784      396      426      371      356      302                  2.91
+  range      249      158       74       60       88       79   (latest minus earliest, days)
+  joint trajectories with a service day: 30 of 30; latest service day 784, 66 days before the end of the run
+  health index against true wear, up to each joint's service day: mean error 0.0028, worst trajectory 0.0037
+  fewest of the 18 speed points the fit could use: 18 up to the service day, 16 over the whole run
+  plot: results/robot/runs_ramp_early.png
+
+ramp_late: 5 runs of 1450 days, 783000 sweep rows, 15.7 MB of sweeps.parquet
+  each joint's wear rate in each run, as a multiple of its nominal rate (from ground truth and work done)
+    run  joint 0  joint 1  joint 2  joint 3  joint 4  joint 5
+      0     0.90     0.94     0.85     1.03     0.78     0.86
+      1     0.83     1.12     1.09     0.96     1.17     0.90
+      2     1.06     1.12     0.99     1.24     0.86     1.25
+      3     1.02     0.78     0.86     0.99     0.99     1.04
+      4     0.67     1.20     0.92     0.93     0.87     0.98
+  service day of each joint in each run (first day the true wear is at or past the threshold)
+    run  joint 0  joint 1  joint 2  joint 3  joint 4  joint 5  wear at end, highest
+      0     1022      773      709      501      570      469                  2.48
+      1     1113      655      551      538      385      444                  2.99
+      2      867      655      609      413      530      324                  3.60
+      3      885      918      695      518      446      377                  3.05
+      4     1376      604      659      549      520      403                  2.83
+  range      509      314      158      136      185      145   (latest minus earliest, days)
+  joint trajectories with a service day: 30 of 30; latest service day 1376, 74 days before the end of the run
+  health index against true wear, up to each joint's service day: mean error 0.0028, worst trajectory 0.0038
+  fewest of the 18 speed points the fit could use: 18 up to the service day, 16 over the whole run
+  plot: results/robot/runs_ramp_late.png
+
+Are run k of the two scenarios the same robot? (same seed: same wear rates, same work until the duty doubles)
+  run 0: sweeps identical on days 0 to 199: True; on days 200 to 249: False
+  run 1: sweeps identical on days 0 to 199: True; on days 200 to 249: False
+  run 2: sweeps identical on days 0 to 199: True; on days 200 to 249: False
+  run 3: sweeps identical on days 0 to 199: True; on days 200 to 249: False
+  run 4: sweeps identical on days 0 to 199: True; on days 200 to 249: False

@@ -1,0 +1,7 @@
+simulation only: scenario ramp_late, 400 days, seed 0
+wrote /Users/johnvu/Documents/robot-pdm/data/simulation/ramp_late  (682 s)
+  sweeps.parquet     43200 rows: one per day, joint and speed. This is the dataset; it holds no wear
+  schedule.csv       the planned duty of each day
+  actual_duty.csv    the duty that really happened
+  events.csv         maintenance events
+  ground_truth.csv   the hidden wear and each joint's service day: the answer key, not for a model

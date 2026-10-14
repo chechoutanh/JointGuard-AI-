@@ -1,0 +1,7 @@
+pybullet build time: Oct 21 2025 17:40:50
+simulation only: ramp_early, 850 days, 5 runs, switched on: WEAR_NOISE, WEAR_ACCEL, WEAR_AFFECTS_FV, MODEL_MISMATCH, SENSOR_FAULTS
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/all/run_0  (seed 0, 532 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/all/run_1  (seed 1, 564 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/all/run_2  (seed 2, 552 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/all/run_3  (seed 3, 570 s)
+wrote /Users/johnvu/Documents/robot-pdm/data/switches/all/run_4  (seed 4, 555 s)

@@ -2,8 +2,6 @@
 
 **JointGuard AI là** dự án nghiên cứu nhằm ước lượng thời điểm một khớp robot công nghiệp cần bảo trì. Dự án dựa vào tín hiệu bên trong máy, như ma sát, mô-men và nhiệt độ, thay vì chỉ dùng camera. Dự án có hai nguồn dữ liệu tách biệt. Nguồn thứ nhất là dữ liệu thật từ các bệ thử ổ lăn và hộp số, dùng để xây dựng và đánh giá phương pháp. Nguồn thứ hai là một cánh tay KUKA iiwa mô phỏng bằng PyBullet: mài mòn được đưa vào thủ công, nên mỗi bộ dữ liệu vận hành sinh ra đều có sẵn đáp án để kiểm tra. Phiên bản hiện tại đã có pipeline dữ liệu, các baseline RUL, bộ mô phỏng, chỉ số sức khỏe theo khớp và dashboard. **Dự án chưa có mô hình RUL, chưa có bộ phát hiện lỗi, chưa dự báo ngày bảo trì và chưa chạy trên robot thật.**
 
-*JointGuard AI is a research project for estimating when an industrial robot joint will need maintenance. It relies on signals from inside the machine, such as friction, torque and temperature, rather than on cameras alone. It uses two separate kinds of data. Real data from bearing and gearbox test rigs is used to build and evaluate the method. A PyBullet simulation of a KUKA iiwa arm, with wear injected by hand, produces operating data whose ground truth is known. The current version provides the data pipeline, RUL baselines, the simulator, a per-joint health index and an offline dashboard. **There is no RUL model, no fault detector and no maintenance-day forecast yet, and nothing has been run on a real robot.***
-
 > Trạng thái theo tài liệu trong repo, cập nhật đến ngày 12/10/2026 (docs/GUIDE.md, docs/LIMITS.md, results/LOG.md).
 
 ---
